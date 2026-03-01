@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   output: 'export',
+  basePath: '/airdrop-farming-saas',
   images: { unoptimized: true },
 };
 export default nextConfig;
