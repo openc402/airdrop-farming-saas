@@ -136,11 +136,11 @@ export async function getWallets() {
 export async function addAirdrop(airdrop: {
   name: string; protocol: string; chain: string; status: string;
   estimated_value: string; tasks: string[]; progress: number; url: string;
-  deadline?: string; snapshot_date?: string; tge_date?: string;
+  deadline?: string; snapshot_date?: string; tge_date?: string; notes?: string;
 }) {
   const { data, error } = await supabase
     .from('airdrops')
-    .insert({ ...airdrop, tasks: JSON.stringify(airdrop.tasks) })
+    .insert({ ...airdrop, tasks: JSON.stringify(airdrop.tasks), source: 'manual' })
     .select()
     .single();
   
