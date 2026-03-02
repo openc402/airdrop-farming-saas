@@ -7,14 +7,17 @@ export default function AirdropsPage() {
   const [airdrops, setAirdrops] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');
+  const [costFilter, setCostFilter] = useState('all');
   const [showAdd, setShowAdd] = useState(false);
   const [form, setForm] = useState({ name: '', protocol: '', chain: '', estimated_value: '', url: '', notes: '' });
 
   const load = () => getAirdrops().then(a => { setAirdrops(a); setLoading(false); });
   useEffect(() => { load(); }, []);
 
-  const filtered = filter === 'all' ? airdrops : airdrops.filter(a => a.status === filter);
-  const chains = [...new Set(airdrops.map(a => a.chain))];
+  let filtered = filter === 'all' ? airdrops : airdrops.filter(a => a.status === filter);
+  if (costFilter !== 'all') filtered = filtered.filter(a => (a.cost || 'free') === costFilter);
+  const freeCount = airdrops.filter(a => (a.cost || 'free') === 'free').length;
+  const paidCount = airdrops.filter(a => a.cost === 'paid').length;
 
   const handleAdd = async () => {
     if (!form.name) return;
@@ -63,13 +66,27 @@ export default function AirdropsPage() {
       )}
 
       {/* Filters */}
-      <div className="flex gap-2 flex-wrap">
-        {['all', 'active', 'upcoming', 'ended'].map(f => (
-          <button key={f} onClick={() => setFilter(f)}
-            className={`px-3 py-1.5 rounded-xl text-xs font-medium transition-all ${
-              filter === f ? 'bg-purple-500/20 text-purple-300' : 'bg-white/5 text-zinc-500 hover:text-zinc-300'
-            }`}>{f === 'all' ? `All (${airdrops.length})` : f}</button>
-        ))}
+      <div className="flex flex-col sm:flex-row gap-3">
+        <div className="flex gap-2 flex-wrap">
+          {['all', 'active', 'upcoming', 'ended'].map(f => (
+            <button key={f} onClick={() => setFilter(f)}
+              className={`px-3 py-1.5 rounded-xl text-xs font-medium transition-all ${
+                filter === f ? 'bg-purple-500/20 text-purple-300' : 'bg-white/5 text-zinc-500 hover:text-zinc-300'
+              }`}>{f === 'all' ? `All (${airdrops.length})` : f}</button>
+          ))}
+        </div>
+        <div className="flex gap-2 flex-wrap">
+          {[
+            { key: 'all', label: '💰 Tous', count: airdrops.length },
+            { key: 'free', label: '🆓 Gratuit', count: freeCount },
+            { key: 'paid', label: '💸 Payant', count: paidCount },
+          ].map(f => (
+            <button key={f.key} onClick={() => setCostFilter(f.key)}
+              className={`px-3 py-1.5 rounded-xl text-xs font-medium transition-all ${
+                costFilter === f.key ? 'bg-green-500/20 text-green-300' : 'bg-white/5 text-zinc-500 hover:text-zinc-300'
+              }`}>{f.label} ({f.count})</button>
+          ))}
+        </div>
       </div>
 
       {/* Cards */}
@@ -86,9 +103,14 @@ export default function AirdropsPage() {
                   </div>
                   <p className="text-zinc-500 text-xs">{a.protocol} · {a.chain}</p>
                 </div>
-                <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-medium ${
-                  a.status === 'active' ? 'badge-active' : a.status === 'upcoming' ? 'badge-upcoming' : 'badge-ended'
-                }`}>{a.status}</span>
+                <div className="flex gap-1.5">
+                  <span className={`px-2 py-0.5 rounded-full text-[10px] font-medium ${
+                    (a.cost || 'free') === 'free' ? 'bg-green-500/15 text-green-400' : 'bg-orange-500/15 text-orange-400'
+                  }`}>{(a.cost || 'free') === 'free' ? '🆓 Free' : '💸 Paid'}</span>
+                  <span className={`px-2 py-0.5 rounded-full text-[10px] font-medium ${
+                    a.status === 'active' ? 'badge-active' : a.status === 'upcoming' ? 'badge-upcoming' : 'badge-ended'
+                  }`}>{a.status}</span>
+                </div>
               </div>
 
               {a.estimated_value && (

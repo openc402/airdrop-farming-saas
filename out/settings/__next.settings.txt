@@ -1,4 +1,4 @@
 1:"$Sreact.fragment"
 2:I[52607,["/airdrop-farming-saas/_next/static/chunks/2ef73e6701ee8fd7.js","/airdrop-farming-saas/_next/static/chunks/4a110dd9cef01944.js"],"default"]
 3:I[43946,["/airdrop-farming-saas/_next/static/chunks/2ef73e6701ee8fd7.js","/airdrop-farming-saas/_next/static/chunks/4a110dd9cef01944.js"],"default"]
-0:{"buildId":"KJNL87YYwNh_E_-GU2ZcR","rsc":["$","$1","c",{"children":[null,["$","$L2",null,{"parallelRouterKey":"children","template":["$","$L3",null,{}]}]]}],"loading":null,"isPartial":false}
+0:{"buildId":"CoXo0u97HZPkma90dvs9b","rsc":["$","$1","c",{"children":[null,["$","$L2",null,{"parallelRouterKey":"children","template":["$","$L3",null,{}]}]]}],"loading":null,"isPartial":false}
